@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.javaex.framework.dao.sys_dict_data.ISysDictDataDAO">
+	
+	<!-- 字典键值唯一性校验 -->
+	<select id="checkUnique" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sys_dict_data
+		WHERE
+			dict_code = #{dictCode}
+		<if test="dictValue!=null and dictValue!=''">
+			AND dict_value = #{dictValue}
+		</if>
+		<if test="id!=null and id!=''">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 根据字典编码查询选项 -->
+	<select id="selectListByDictCode" resultType="cn.javaex.framework.model.vo.SysDictDataVO">
+		SELECT
+			*
+		FROM
+			sys_dict_data
+		WHERE
+			dict_code = #{dictCode}
+		AND is_deleted = '0'
+		ORDER BY
+			sort
+	</select>
+	
+	<!-- 将同编码的其他字典默认值设定取消 -->
+	<update id="updateDefault0ByDictCode">
+		UPDATE sys_dict_data 
+		SET is_default = '0'
+		WHERE
+			dict_code = #{dictCode}
+	</update>
+	
+	<!-- 查询已有的编码列表 -->
+	<select id="selectDictCodeList" resultType="cn.javaex.framework.model.vo.SysDictDataVO">
+		SELECT
+			dict_code,
+			dict_code_comment 
+		FROM
+			sys_dict_data 
+		GROUP BY
+			dict_code 
+		ORDER BY
+			dict_code
+	</select>
+	
+	<!-- 查询列表 -->
+	<select id="list" resultType="cn.javaex.framework.model.vo.SysDictDataVO">
+		SELECT 
+			sd.*
+		FROM 
+			sys_dict_data sd
+		INNER JOIN 
+			(
+		      SELECT 
+		          dict_code, 
+		          MAX(update_time) as max_update_time
+		      FROM 
+		          sys_dict_data
+		      GROUP BY 
+		          dict_code
+			) as subquery ON sd.dict_code = subquery.dict_code
+		WHERE
+			1 = 1
+		<if test="dictCode!=null and dictCode!=''">
+			AND sd.dict_code LIKE CONCAT('%', #{dictCode}, '%')
+		</if>
+		<if test="dictCodeComment!=null and dictCodeComment!=''">
+			AND sd.dict_code_comment LIKE CONCAT('%', #{dictCodeComment}, '%')
+		</if>
+		<if test="dictValue!=null and dictValue!=''">
+			AND sd.dict_value LIKE CONCAT('%', #{dictValue}, '%')
+		</if>
+		<if test="dictText!=null and dictText!=''">
+			AND sd.dict_text LIKE CONCAT('%', #{dictText}, '%')
+		</if>
+		<if test="isDeleted!=null">
+			AND sd.is_deleted = #{isDeleted}
+		</if>
+		ORDER BY 
+			subquery.max_update_time DESC,
+			sd.dict_code,
+			sd.sort
+	</select>
+
+</mapper>

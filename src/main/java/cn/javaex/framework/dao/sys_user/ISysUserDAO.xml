@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.javaex.framework.dao.sys_user.ISysUserDAO">
+
+	<!-- 登录名唯一性校验 -->
+	<select id="checkUnique" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sys_user
+		WHERE
+			username = #{username}
+		<if test="id!=null and id!=''">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 查询指定角色下，绑定的用户 -->
+	<select id="selectBindList" resultType="cn.javaex.framework.model.vo.SysUserVO">
+		SELECT
+			*
+		FROM
+			sys_user
+		WHERE
+			status = '0'
+		<if test="keyword!=null and keyword!=''">
+			AND (username LIKE CONCAT('%', #{keyword}, '%') OR nickname LIKE CONCAT('%', #{keyword}, '%') OR phone LIKE CONCAT('%', #{keyword}, '%') OR email LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+		AND id IN (
+			SELECT
+				user_id
+			FROM
+				sys_role_user_rel
+			WHERE
+				role_id = #{roleId}
+		)
+	</select>
+	
+	<!-- 查询指定角色下，未绑定的用户 -->
+	<select id="selectUnbindList" resultType="cn.javaex.framework.model.vo.SysUserVO">
+		SELECT
+			*
+		FROM
+			sys_user
+		WHERE
+			status = '0'
+		<if test="keyword!=null and keyword!=''">
+			AND (username LIKE CONCAT('%', #{keyword}, '%') OR nickname LIKE CONCAT('%', #{keyword}, '%') OR phone LIKE CONCAT('%', #{keyword}, '%') OR email LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+		AND id NOT IN (
+			SELECT
+				user_id
+			FROM
+				sys_role_user_rel
+			WHERE
+				role_id = #{roleId}
+		)
+	</select>
+	
+	<!-- 查询列表 -->
+	<select id="selectList" resultType="cn.javaex.framework.model.vo.SysUserVO">
+		SELECT
+			u.*,
+			d.department_name
+		FROM
+			sys_user u
+		LEFT JOIN sys_department d ON u.department_id = d.id
+		WHERE
+			1 = 1
+		<if test="username!=null and username!=''">
+			AND u.username LIKE CONCAT('%', #{username}, '%')
+		</if>
+		<if test="nickname!=null and nickname!=''">
+			AND u.nickname LIKE CONCAT('%', #{nickname}, '%')
+		</if>
+		<if test="phone!=null and phone!=''">
+			AND u.phone LIKE CONCAT('%', #{phone}, '%')
+		</if>
+		<if test="email!=null and email!=''">
+			AND u.email LIKE CONCAT('%', #{email}, '%')
+		</if>
+		<if test="sex!=null">
+			AND u.sex = #{sex}
+		</if>
+		<if test="status!=null">
+			AND u.status = #{status}
+		</if>
+		<if test="beginTime!=null and beginTime!=''">
+			AND u.create_time &gt;= #{beginTime}
+		</if>
+		<if test="endTime!=null and endTime!=''">
+			AND u.create_time &lt;= #{endTime}
+		</if>
+		<if test="departmentIdList!=null and departmentIdList.size()>0">
+			AND u.department_id IN
+			<foreach collection="departmentIdList" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="sortStr!=null and sortStr!=''">
+			${sortStr}
+		</if>
+	</select>
+</mapper>

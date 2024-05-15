@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.javaex.framework.dao.sys_role.ISysRoleDAO">
+	
+	<!-- 查询上一条记录 -->
+	<select id="selectLastBySort" resultType="cn.javaex.framework.model.entity.SysRoleEntity">
+		SELECT
+			*
+		FROM
+			sys_role
+		WHERE
+			sort &lt; #{sort}
+		ORDER BY
+			sort DESC
+		LIMIT 1
+	</select>
+	
+	<!-- 查询下一条记录 -->
+	<select id="selectNextBySort" resultType="cn.javaex.framework.model.entity.SysRoleEntity">
+		SELECT
+			*
+		FROM
+			sys_role
+		WHERE
+			sort &gt; #{sort}
+		ORDER BY
+			sort
+		LIMIT 1
+	</select>
+	
+	<!-- 查询哪些角色可以访问该菜单（只查询code） -->
+	<select id="selectRoleCodeListByMenuUrl" resultType="String">
+		SELECT
+			r.role_code
+		FROM
+			sys_role r,
+			sys_role_menu_rel rm,
+			sys_menu m
+		WHERE
+			r.id = rm.role_id
+		AND rm.menu_id = m.id
+		AND m.url = #{url}
+	</select>
+
+	<!--  根据用户ID查询用户所有角色 -->
+	<select id="selectRoleListByUserId" resultType="cn.javaex.framework.model.entity.SysRoleEntity">
+		SELECT
+			r.*
+		FROM
+			sys_role r,
+			sys_role_user_rel ru
+		WHERE
+			r.id = ru.role_id
+		AND ru.user_id = #{userId}
+	</select>
+	
+	<!-- 角色标识唯一性校验 -->
+	<select id="checkUnique" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sys_role
+		WHERE
+			role_code = #{roleCode}
+		<if test="id!=null and id!=''">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 查询所有角色 -->
+	<select id="selectList" resultType="cn.javaex.framework.model.vo.SysRoleVO">
+		SELECT
+			*
+		FROM
+			sys_role
+		WHERE
+			1 = 1
+		<if test="roleCode!=null and roleCode!=''">
+			AND role_code LIKE CONCAT('%', #{roleCode}, '%')
+		</if>
+		<if test="roleName!=null and roleName!=''">
+			AND role_name LIKE CONCAT('%', #{roleName}, '%')
+		</if>
+		ORDER BY
+			sort
+	</select>
+
+	<!-- 查询目前最大排序 -->
+	<select id="selectMaxSort" resultType="int">
+		SELECT
+			IFNULL(MAX(sort), 0) AS sort
+		FROM
+			sys_role
+	</select>
+	
+</mapper>

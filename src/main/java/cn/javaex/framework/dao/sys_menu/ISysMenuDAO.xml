@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.javaex.framework.dao.sys_menu.ISysMenuDAO">
+	
+	<!-- 查询出所有子级和自己 -->
+	<select id="selectIdListByRecursive" resultType="String">
+		WITH RECURSIVE Submenus AS (
+		    SELECT id
+		    FROM sys_menu
+		    WHERE id = #{id}
+		    UNION ALL
+		    SELECT m.id
+		    FROM sys_menu m
+		    INNER JOIN Submenus sm ON m.parent_id = sm.id
+		)
+		SELECT * FROM Submenus
+	</select>
+	
+	<!-- 查询所有按钮权限标识 -->
+	<select id="selectPermCodeList" resultType="String">
+		SELECT
+			perm_code
+		FROM
+			sys_menu
+		WHERE
+			IFNULL(perm_code, '') != ''
+	</select>
+	
+	<!-- 查询所有菜单路径 -->
+	<select id="selectMenuUrlList" resultType="String">
+		SELECT
+			url
+		FROM
+			sys_menu
+		WHERE
+			IFNULL(url, '') != ''
+	</select>
+	
+	<!-- 查询用户的所有按钮权限 -->
+	<select id="selectPermCodeListByUserId" resultType="String">
+		SELECT
+			m.perm_code
+		FROM
+			sys_menu m,
+			sys_role_menu_rel rm
+		WHERE
+			m.id = rm.menu_id
+		AND IFNULL(m.perm_code, '') != ''
+		AND rm.role_id IN (
+			SELECT
+				role_id
+			FROM
+				sys_role_user_rel
+			WHERE
+				user_id = #{userId}
+		)
+	</select>
+	
+	<!-- 校验按钮权限标识是否重复 -->
+	<select id="selectCountByPermCode" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sys_menu
+		WHERE
+			perm_code = #{permCode}
+		<if test="id!=null and id!=''">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 校验导航标识是否重复 -->
+	<select id="selectCountByUrl" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sys_menu
+		WHERE
+			url = #{url}
+		<if test="id!=null and id!=''">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 查询当前用户有权限的菜单 -->
+	<select id="selectListByUserId" resultType="cn.javaex.framework.model.vo.SysMenuVO">
+		SELECT DISTINCT
+			m.*
+		FROM
+			sys_menu m,
+			sys_role_menu_rel rm,
+			sys_role_user_rel ru
+		WHERE
+			m.id = rm.menu_id
+		AND m.type != '按钮'
+		AND IFNULL(m.is_hidden, '0') = '0'
+		AND rm.role_id = ru.role_id
+		AND ru.user_id = #{userId}
+		ORDER BY
+			m.parent_id,
+			m.sort
+	</select>
+	
+	<!-- 查询当前菜单级别下最大排序 -->
+	<select id="selectMaxSortByParentId" resultType="int">
+		SELECT
+			IFNULL(MAX(sort), 0) AS sort
+		FROM
+			sys_menu
+		WHERE
+			parent_id = #{parentId}
+	</select>
+	
+	<!-- 查询所有菜单 -->
+	<select id="selectAllList" resultType="cn.javaex.framework.model.vo.SysMenuVO">
+		SELECT
+			*
+		FROM
+			sys_menu
+		ORDER BY
+			parent_id,
+			sort
+	</select>
+	
+	<!-- 查询所有菜单（排除按钮） -->
+	<select id="selectMenuListExclusionButton" resultType="cn.javaex.framework.model.vo.SysMenuVO">
+		SELECT
+			*
+		FROM
+			sys_menu
+		WHERE
+			type != '按钮'
+		ORDER BY
+			sort
+	</select>
+</mapper>

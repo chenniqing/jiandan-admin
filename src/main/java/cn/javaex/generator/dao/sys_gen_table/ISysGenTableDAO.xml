@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.javaex.generator.dao.sys_gen_table.ISysGenTableDAO">
+	
+	<!-- 查询列表 -->
+	<select id="list" resultType="cn.javaex.generator.model.vo.SysGenTableVO">
+		SELECT
+			*
+		FROM
+			sys_gen_table
+		WHERE
+			1 = 1
+		<if test="keyword!=null and keyword!=''">
+			AND (table_name LIKE CONCAT('%', #{keyword}, '%') OR table_comment LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+		<if test="sortStr!=null and sortStr!=''">
+			${sortStr}
+		</if>
+	</select>
+	
+	<!-- 唯一性校验 -->
+	<select id="checkUnique" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sys_gen_table
+		WHERE
+			table_name = #{tableName}
+		<if test="id!=null and id!=''">
+			AND id != #{id}
+		</if>
+	</select>
+	
+</mapper>

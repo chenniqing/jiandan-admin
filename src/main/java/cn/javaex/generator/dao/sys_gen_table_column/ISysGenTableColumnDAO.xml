@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.javaex.generator.dao.sys_gen_table_column.ISysGenTableColumnDAO">
+	
+	<!-- 查询列表 -->
+	<select id="list" resultType="cn.javaex.generator.model.vo.SysGenTableColumnVO">
+		SELECT
+			*
+		FROM
+			sys_gen_table_column
+		WHERE
+			1 = 1
+		AND table_id = #{tableId}
+		<if test="keyword!=null and keyword!=''">
+			AND (column_name LIKE CONCAT('%', #{keyword}, '%') OR column_comment LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+		ORDER BY
+			sort
+	</select>
+	
+	<!-- 查询上一条记录 -->
+	<select id="selectLastBySort" resultType="cn.javaex.generator.model.entity.SysGenTableColumnEntity">
+		SELECT
+			*
+		FROM
+			sys_gen_table_column
+		WHERE
+			table_id = #{tableId}
+		AND sort &lt; #{sort}
+		ORDER BY
+			sort DESC
+		LIMIT 1
+	</select>
+	
+	<!-- 查询下一条记录 -->
+	<select id="selectNextBySort" resultType="cn.javaex.generator.model.entity.SysGenTableColumnEntity">
+		SELECT
+			*
+		FROM
+			sys_gen_table_column
+		WHERE
+			table_id = #{tableId}
+		AND sort &gt; #{sort}
+		ORDER BY
+			sort
+		LIMIT 1
+	</select>
+	
+	<!-- 唯一性校验 -->
+	<select id="checkUnique" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sys_gen_table_column
+		WHERE
+			table_id = #{tableId}
+		AND column_name = #{columnName}
+		<if test="id!=null and id!=''">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 取消所有唯一性字段校验 -->
+	<delete id="updateIsUnique0ByTableId">
+		UPDATE sys_gen_table_column SET is_unique='0' WHERE table_id = #{tableId}
+	</delete>
+	
+	<!-- 查询当前表下最大排序 -->
+	<select id="selectMaxSortByTableId" resultType="int">
+		SELECT
+			IFNULL(MAX(sort), 0) AS sort
+		FROM
+			sys_gen_table_column
+		WHERE
+			table_id = #{tableId}
+	</select>
+	
+</mapper>
