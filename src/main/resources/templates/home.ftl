@@ -68,7 +68,7 @@ ul li span {
 					<div class="javaex-banner"><span class="javaex-block-fixed"></span>开发优势</div>
 						<div class="javaex-main-0">
 							<ol>
-								<li>不用写任何注解即可实现菜单的控制权限</li>
+								<li>不用写任何注解即可实现菜单和按钮的控制权限</li>
 								<li>仅需一个注解即可实现数据权限</li>
 								<li>FreeMarker模板引擎的语法贴近JSP，更适合后端快速开发</li>
 								<li>轮子全都自己造，文档齐全，代码简洁，更容易上手</li>
