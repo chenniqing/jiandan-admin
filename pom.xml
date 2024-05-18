@@ -143,21 +143,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			
-			<plugin>
-				<groupId>cn.joylau.code</groupId>
-				<artifactId>joylau-springboot-daemon-windows</artifactId>
-				<version>1.0.RELEASE</version>
-				<executions>
-					<execution>
-						<id>jiandan-admin</id>
-						<phase>package</phase>
-						<goals>
-							<goal>make-win-service</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 		
 		<!-- 让idea识别src/main/java下的xml文件 -->
