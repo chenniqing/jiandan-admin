@@ -215,16 +215,10 @@ public class SysUserService {
 	public SysUserEntity selectByUsername(String username) throws QingException {
 		List<SysUserEntity> userList = iSysUserDAO.selectListByColumn("username", username);
 		if (CollectionUtils.isEmpty(userList)) {
-			throw new QingException("用户不存在");
+			return null;
 		}
 		
-		SysUserEntity user = userList.get(0);
-		
-		if (user.getStatus()==1) {
-			throw new QingException("该用户已被禁止登录");
-		}
-		
-		return user;
+		return userList.get(0);
 	}
 
 	/**
