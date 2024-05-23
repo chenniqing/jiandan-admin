@@ -112,7 +112,20 @@ ul li span {
 					<i class="javaex-subscript blue">更新日志</i>
 					<div class="javaex-main">
 						<ul>
-							<li class="ml-20"><span>v 1.0.0：</span>2024-05-15</li>
+							<li class="javaex-edit-content ml-20">
+								<span>v 1.0.0：</span>2024-05-15
+								<ul class="mt-10">
+									<li class="ml-20">初版发布</li>
+								</ul>
+							</li>
+							<li class="javaex-edit-content ml-20">
+								<span>v 1.1.3：</span>2024-05-24
+								<ul class="mt-10">
+									<li class="ml-20">修复当账号不存在时，提示文字不恰当的问题</li>
+									<li class="ml-20">优化Xss过滤器对白名单的处理方式</li>
+									<li class="ml-20">修复数据权限使用占位符方式的BUG</li>
+								</ul>
+							</li>
 						</ul>
 					</div>
 				</div>

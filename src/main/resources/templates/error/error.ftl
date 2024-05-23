@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>/(ㄒoㄒ)/~~ - 简单管理系统</title>
+<title>/(ㄒoㄒ)/~~ - ${system_name}</title>
 <style>
 *{padding:0;margin:0}
 a{text-decoration:none}

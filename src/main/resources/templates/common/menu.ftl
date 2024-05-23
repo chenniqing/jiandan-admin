@@ -10,7 +10,7 @@
 	<div class="javaex-navbar">
 		<div class="javaex-container-fluid clear">
 			<!--logo名称-->
-			<div class="javaex-logo">简单管理系统</div>
+			<div class="javaex-logo">${system_name}</div>
 			
 			<!--左侧导航-->
 			<ul class="javaex-nav fl">

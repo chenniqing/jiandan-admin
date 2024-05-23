@@ -19,7 +19,7 @@ import cn.javaex.mybatisjj.config.interceptor.BeforeModifiedSqlInterceptor;
 public class UserDataPermissionInterceptor implements BeforeModifiedSqlInterceptor {
 	
 	// 条件占位符
-	private static final String CONDITIONS_PLACEHOLDER = "${CONDITIONS}";
+	private static final String CONDITIONS_PLACEHOLDER = "{CONDITIONS}";
 	
 	// 使用ThreadLocal来保持每个线程的权限过滤信息
 	private static final ThreadLocal<DataPermissionFilter> permissionFilterHolder = new ThreadLocal<>();
@@ -50,6 +50,9 @@ public class UserDataPermissionInterceptor implements BeforeModifiedSqlIntercept
 		// 构建条件SQL
 		String conditionSql = this.getConditionSQL(filter);
 		if (StringUtils.isEmpty(conditionSql)) {
+			if (originalSql.contains(CONDITIONS_PLACEHOLDER)) {
+				return originalSql.replace(CONDITIONS_PLACEHOLDER, "");
+			}
 			return originalSql;
 		}
 		

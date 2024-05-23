@@ -3,6 +3,7 @@ package cn.javaex.framework.config.xss;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,7 +13,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @WebFilter
 public class XssRequestFilter implements Filter {
@@ -27,15 +27,15 @@ public class XssRequestFilter implements Filter {
 		/**
 		 * 示例
 		 */
-//		whiteList.add("/sys/login");
+//		whiteList.add("/food/guide/add");
+//		whiteList.add("/food/guide/update/.*");    // /food/guide/update/{id}
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse resp = (HttpServletResponse) response;
-		if (isWhiteList(req, resp)) {
+		if (isWhiteList(req)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -43,10 +43,10 @@ public class XssRequestFilter implements Filter {
 		chain.doFilter(xssRequest, response);
 	}
 
-	private boolean isWhiteList(HttpServletRequest request, HttpServletResponse response) {
-		for (int i = 0; i < whiteList.size(); i++) {
-			String servletPath = request.getServletPath();
-			if (whiteList.get(i).equals(servletPath)) {
+	private boolean isWhiteList(HttpServletRequest request) {
+		String servletPath = request.getServletPath();
+		for (String pattern : whiteList) {
+			if (Pattern.matches(pattern, servletPath)) {
 				return true;
 			}
 		}
@@ -57,5 +57,4 @@ public class XssRequestFilter implements Filter {
 	public void destroy() {
 
 	}
-
 }

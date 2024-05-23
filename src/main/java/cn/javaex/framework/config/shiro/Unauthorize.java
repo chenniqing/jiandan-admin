@@ -38,9 +38,8 @@ public class Unauthorize {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping("403")
+	@RequestMapping("/403")
 	public String error403(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
 		if (isAjax(request)) {
 			Map<String, Object> responseMap = new HashMap<String, Object>();
 			responseMap.put("code", AccessError.NO_ACCESS.getCode());
@@ -48,12 +47,19 @@ public class Unauthorize {
 			String json = JSON.toJSONString(responseMap);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/json; charset=utf-8");
-			response.getWriter().write(json);
-			response.getWriter().flush();
+			if (response.isCommitted() == false) {
+				response.getWriter().write(json);
+				response.getWriter().flush();
+			}
 			return null;
 		}
 		
 		return "error/403";
 	}
 
+	@RequestMapping("/404")
+	public String error404(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		return "error/404";
+	}
+	
 }

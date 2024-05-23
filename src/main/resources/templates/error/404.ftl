@@ -3,7 +3,7 @@
 
 <head>
   <meta charset='UTF-8'>
-  <title>403 - ${system_name}</title>
+  <title>404 - ${system_name}</title>
 
   <meta name="robots" content="noindex">
 <!--jquery-->
@@ -770,8 +770,8 @@ h4{
 <div class="wrapper">
   <div class="TextHolder">
     <div class="Texts">
-      <div class="FourOhFour">403</div>
-      <div class="Bad">没有权限访问</div>
+      <div class="FourOhFour">404</div>
+      <div class="Bad">要找的资源不见了</div>
 <!--       <div class="Return" onclick="javascript:history.back();">返回</div> -->
     </div>
   </div>
