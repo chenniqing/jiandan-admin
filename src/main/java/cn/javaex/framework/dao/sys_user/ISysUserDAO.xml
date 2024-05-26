@@ -91,7 +91,7 @@
 			AND u.create_time &gt;= #{beginTime}
 		</if>
 		<if test="endTime!=null and endTime!=''">
-			AND u.create_time &lt;= #{endTime}
+			AND u.create_time &lt;= (DATE_ADD(#{endTime}, INTERVAL 1 DAY) - INTERVAL 1 SECOND)
 		</if>
 		<if test="departmentIdList!=null and departmentIdList.size()>0">
 			AND u.department_id IN

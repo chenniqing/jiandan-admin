@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -19,7 +20,7 @@ import cn.javaex.framework.basic.exception.QingException;
 /**
  * 统一日志管理
  * 
- * 陈霓清
+ * @author 陈霓清
  */
 @Aspect
 @Component
@@ -39,6 +40,8 @@ public class LogAspect {
 	 */
 	@Before("aopLog()")
 	public void before(JoinPoint joinPoint) {
+		MDC.put("threadId", String.valueOf(Thread.currentThread().getId()));
+		
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = attributes.getRequest();
 		String url = request.getRequestURL().toString();
@@ -57,6 +60,8 @@ public class LogAspect {
 		String url = request.getRequestURL().toString();
 		String methodName = joinPoint.getSignature().getName();
 		log.info(url + ": " + methodName + "()==========>正常终了");
+		
+		MDC.remove("threadId");
 	}
 	
 	/**
@@ -78,5 +83,7 @@ public class LogAspect {
 		} else {
 			log.error("异常原因：" + ex);
 		}
+		
+		MDC.remove("threadId");
 	}
 }

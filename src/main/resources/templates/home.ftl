@@ -82,6 +82,8 @@ ul li span {
 				<div class="box" style="overflow:hidden;">
 					<i class="javaex-subscript red">联系信息</i>
 					<div class="javaex-main">
+						源码下载：<a href="https://gitee.com/javaex/jiandan-admin" class="javaex-link primary" target="_blank">https://gitee.com/javaex/jiandan-admin</a>
+						<br/><br/>
 						官网：<a href="https://www.javaex.cn" class="javaex-link primary" target="_blank">https://www.javaex.cn</a>
 						<br/><br/>
 						QQ群：587243028
@@ -124,6 +126,14 @@ ul li span {
 									<li class="ml-20">修复当账号不存在时，提示文字不恰当的问题</li>
 									<li class="ml-20">优化Xss过滤器对白名单的处理方式</li>
 									<li class="ml-20">修复数据权限使用占位符方式的BUG</li>
+								</ul>
+							</li>
+							<li class="javaex-edit-content ml-20">
+								<span>v 1.2.3：</span>2024-05-26
+								<ul class="mt-10">
+									<li class="ml-20">日志打印追加线程ID的输出</li>
+									<li class="ml-20">角色列表展示数据权限范围</li>
+									<li class="ml-20">修复用户列表创建时间的筛选BUG</li>
 								</ul>
 							</li>
 						</ul>

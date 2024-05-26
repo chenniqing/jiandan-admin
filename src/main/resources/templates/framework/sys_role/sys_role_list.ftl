@@ -40,6 +40,7 @@
 									<th class="javaex-table-num-col"></th>
 									<th>角色名称</th>
 									<th>角色标识</th>
+									<th>数据权限范围</th>
 									<th style="width:200px;">排序</th>
 									<th style="width:400px;">操作</th>
 								</tr>
@@ -120,6 +121,17 @@ function getList() {
 						html += '	<td>'+(i+1)+'</td>';
 						html += '	<td>'+data.roleName+'</td>';
 						html += '	<td>'+data.roleCode+'</td>';
+						html += '	<td>';
+						if (javaex.ifnull(data.dataScope, 0) == 1) {
+							html += '全部数据权限';
+						} else if (javaex.ifnull(data.dataScope, 0) == 2) {
+							html += '本部门及以下数据权限';
+						} else if (javaex.ifnull(data.dataScope, 0) == 3) {
+							html += '本部门数据权限';
+						} else if (javaex.ifnull(data.dataScope, 0) == 4) {
+							html += '仅自己数据权限';
+						}
+						html += '	</td>';
 						html += '	<td>';
 						if (i>0) {
 							html += '	<a href="javascript:;" class="navy mr-10" onclick="move(\''+data.id+'\', \'up\')">上移</a>';
